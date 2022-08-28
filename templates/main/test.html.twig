@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>TESt!!</h1>
+
+<div>
+
+    <div>{{"now" |date('Y') }}</div>
+    <div>{{"+1 year" |date('Y') }}</div>
+
+
+    {# crée une variable #}
+    {% set name = 'Aurore' %}
+    <h2>{{ name |upper}}</h2>
+    <h2>{{ name |length}}</h2>
+
+
+    {# crée un tableau #}
+    {% set couleurs = ["pink", "blue","turquoise","orange"] %}
+
+    <div>Nombre de couleurs:{{couleurs|length }}</div>
+    <div>{{ couleurs|join('-') }}</div>
+
+    {# on boucle sur le tableau #}
+
+    {% for couleur in couleurs %}
+        <div>Itération :{{ loop.index }}</div>{# ou l'itération en es #}
+        <div> Derniére itération:{{ loop.last }}</div>
+        <div style="background-color: {{ couleur }}">{{ couleur }}</div>
+    {% endfor %}
+
+
+    {# un objet #}
+    {% set livre = {titre: 'ecume',
+        annee: 2022,
+        auteur: 'MimiShou'} %}
+
+    <h3>{{ livre.auteur }}</h3>
+
+    <div>
+        {% for key, val in livre %}
+            <div>{{ key }} : {{ val }}</div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+{% endblock %}
+{% block title %}{{ parent() }} | Test{% endblock %}
