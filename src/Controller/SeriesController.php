@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -29,6 +30,7 @@ class SeriesController extends AbstractController
     #[Route('/series/create', name: 'serie_create')]
     public function create(): Response
     {
+
         //todo:aller chercher les series en BDD
         return $this->render('series/create.html.twig', [
 
