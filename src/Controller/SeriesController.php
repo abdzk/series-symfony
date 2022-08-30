@@ -17,19 +17,20 @@ class SeriesController extends AbstractController
     #[Route('/series', name: 'serie_list')]
     public function list(SerieRepository $serieRepository): Response
     {
-        $serie= $serieRepository->findAll();
-        dd($serie);
-        return $this->render('series/list.html.twig', [
+        $serie= $serieRepository->findBestSeries();
 
+        return $this->render('series/list.html.twig', [
+            "series"=>$serie //afficher le tableau dans le twig
         ]);
     }
 
     #[Route('/series/details/{id}', name: 'serie_details')]
-    public function details(int $id): Response
+    public function details(int $id, SerieRepository $serieRepository): Response
     {
-        //todo:aller chercher les series en BDD
+            $serie = $serieRepository->find($id);
         return $this->render('series/details.html.twig', [
 
+            "serie"=>$serie
         ]);
     }
 
@@ -64,7 +65,7 @@ class SeriesController extends AbstractController
 
 
 
-                dump($serie);
+
                 $entityManager->remove($serie);
                 $entityManager->flush();
 
