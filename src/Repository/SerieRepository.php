@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Serie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -39,40 +40,43 @@ class SerieRepository extends ServiceEntityRepository
         }
     }
 
-    public function findBestSeries()
-    {
+
+    public function findBestSeries(){
+
         //en DQL
-        $entityManager = $this->getEntityManager(); //récuoeration de entitymanager
-        $dql="
-                SELECT s            
+       /* $entityManager = $this->getEntityManager();
+        $dql ="
+                SELECT s
                 FROM App\Entity\Serie s
                 WHERE s.popularity > 100
-                AND s.vote >8
-                ORDER BY s.popularity DESC"; //chaine de DQL
-
-                $query=$entityManager->createQuery($dql);//je récupere un objet query
-                $query->setMaxResults(50);      //je peux limiter mon nombre de résulats récupérer
-                $results = $query->getResult();         //je récupére le résultat en tableau
-                //$results = $query->getOne(); //retourné l'instance de la classe
-                $query->setMaxResults(50);      //je peux limiter mon nombre de résulats récupérer
-                $results = $query->getResult();         //je récupére le résultat en tableau
-                return $results;
-
-        /*
-        //version QueryBuilder
-        $queryBuilder = $this->createQueryBuilder('s');
-        $queryBuilder = andWhere('s.popularity >100');
-        $queryBuilder = andWhere('s.vote'>8);
-        $queryBuilder = addOrderBy('s.popularity','DESC');
-        $query = $queryBuilder->getQuery();
-
-        $query->setMaxResults(50);      //je peux limiter mon nombre de résulats récupérer
-        $results = $query->getResult();         //je récupére le résultat en tableau
+                AND s.vote > 8
+                ORDER BY s.popularity DESC ";
+        $query = $entityManager->createQuery($dql);
+        $query ->setMaxResults(50);
+        $results = $query->getResult();
         return $results;*/
 
+        //version QueryBuilder
+        $queryBuilder = $this->createQueryBuilder('s');
+
+        $queryBuilder->leftJoin('s.seasons','seas')
+            ->addSelect();//joiture
+
+
+        $queryBuilder->andWhere('s.popularity > 100');
+        $queryBuilder->andWhere('s.vote>8');
+        $queryBuilder->addOrderBy('s.popularity','DESC');
+        $query = $queryBuilder->getQuery();
+
+        $query->setMaxResults(50);
+
+        $paginator = new Paginator($query);
+
+        $results = $query->getResult();
+        return $paginator;
+
+          
     }
-
-
 //    /**
 //     * @return Serie[] Returns an array of Serie objects
 //     */
